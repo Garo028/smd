@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ScottyMd — Web Pairing</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#0d0d0d;font-family:'Segoe UI',sans-serif;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.glow{position:fixed;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(37,211,102,.12) 0%,transparent 65%);pointer-events:none}
+.glow2{position:fixed;bottom:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(37,211,102,.07) 0%,transparent 65%);pointer-events:none}
+.wrap{width:100%;max-width:460px;z-index:1}
+.header{text-align:center;margin-bottom:28px}
+.logo{width:70px;height:70px;background:linear-gradient(135deg,#25d366,#128c7e);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 14px;box-shadow:0 0 40px rgba(37,211,102,.3)}
+.header h1{font-size:26px;font-weight:800}
+.header p{color:#888;font-size:13px;margin-top:5px}
+.badge{display:inline-flex;align-items:center;gap:7px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:30px;padding:5px 14px;font-size:12px;color:#25d366;margin-top:10px}
+.dot{width:7px;height:7px;background:#25d366;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+.card{background:#141414;border:1px solid #222;border-radius:20px;padding:28px}
+.steps{display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+.st{display:flex;align-items:center;gap:6px;font-size:12px;color:#555;transition:color .3s}
+.st.active{color:#25d366}.st.done{color:#25d366}
+.sn{width:24px;height:24px;border-radius:50%;border:2px solid #333;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;transition:all .3s}
+.st.active .sn,.st.done .sn{background:#25d366;border-color:#25d366;color:#000}
+.sl{width:36px;height:2px;background:#222;margin:0 4px;transition:background .3s}
+.sl.done{background:#25d366}
+label{display:block;font-size:13px;color:#888;margin-bottom:7px;font-weight:500}
+.iw{position:relative;margin-bottom:18px}
+.iw span{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none}
+input{width:100%;background:#1a1a1a;border:1.5px solid #2a2a2a;border-radius:11px;padding:13px 13px 13px 46px;color:#fff;font-size:15px;outline:none;transition:all .2s}
+input:focus{border-color:#25d366;box-shadow:0 0 0 3px rgba(37,211,102,.1)}
+input::placeholder{color:#333}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#25d366,#128c7e);border:none;border-radius:11px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 8px 25px rgba(37,211,102,.25)}
+.btn:active{transform:translateY(0)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:7px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#result{margin-top:20px;display:none}
+.code-box{background:linear-gradient(135deg,rgba(37,211,102,.08),rgba(18,140,126,.04));border:1.5px solid rgba(37,211,102,.3);border-radius:14px;padding:24px;text-align:center}
+.cl{font-size:11px;color:#25d366;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:12px}
+.cv{font-size:38px;font-weight:900;letter-spacing:7px;font-family:'Courier New',monospace;color:#fff;text-shadow:0 0 25px rgba(37,211,102,.5);margin-bottom:16px}
+.cp{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);border-radius:8px;padding:8px 16px;color:#25d366;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s}
+.cp:hover{background:rgba(37,211,102,.2)}
+.how{background:#181818;border-radius:11px;padding:14px 16px;margin-top:14px}
+.how p{font-size:13px;color:#777;line-height:2}
+.how strong{color:#bbb}
+.timer{margin-top:10px;text-align:center;font-size:12px;color:#444}
+.timer b{color:#e74c3c}
+.err{background:rgba(231,76,60,.08);border:1.5px solid rgba(231,76,60,.3);border-radius:11px;padding:13px 15px;color:#e74c3c;font-size:13px}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}
+.feat{background:#181818;border-radius:11px;padding:13px;text-align:center}
+.feat-i{font-size:20px;margin-bottom:5px}
+.feat-t{font-size:12px;color:#ccc;font-weight:600}
+.feat-d{font-size:11px;color:#666;margin-top:2px}
+footer{text-align:center;margin-top:24px;font-size:12px;color:#333}
+</style>
+</head>
+<body>
+<div class="glow"></div><div class="glow2"></div>
+<div class="wrap">
+<div class="header">
+    <div class="logo">🤖</div>
+    <h1>ScottyMd</h1>
+    <p>Professional WhatsApp Bot</p>
+    <div class="badge"><div class="dot"></div> Server Online</div>
+</div>
+<div class="card">
+    <div class="steps">
+        <div class="st active" id="s1"><div class="sn">1</div><span>Number</span></div>
+        <div class="sl" id="l1"></div>
+        <div class="st" id="s2"><div class="sn">2</div><span>Code</span></div>
+        <div class="sl" id="l2"></div>
+        <div class="st" id="s3"><div class="sn">3</div><span>Done ✓</span></div>
+    </div>
+    <label for="phone">📱 Your WhatsApp Number</label>
+    <div class="iw">
+        <span>🌍</span>
+        <input type="text" id="phone" placeholder="e.g. 263788114185" maxlength="15" inputmode="numeric" autocomplete="off"/>
+    </div>
+    <button class="btn" id="btn" onclick="go()">Get Pairing Code →</button>
+    <div id="result"></div>
+</div>
+<div class="feats">
+    <div class="feat"><div class="feat-i">⚡</div><div class="feat-t">Fast</div><div class="feat-d">Instant pairing</div></div>
+    <div class="feat"><div class="feat-i">🔒</div><div class="feat-t">Secure</div><div class="feat-d">No data stored</div></div>
+    <div class="feat"><div class="feat-i">🤖</div><div class="feat-t">100 Commands</div><div class="feat-d">Powerful bot</div></div>
+    <div class="feat"><div class="feat-i">🌍</div><div class="feat-t">24/7</div><div class="feat-d">Always running</div></div>
+</div>
+<footer>ScottyMd v2.0 • © Scotty • 100 Commands</footer>
+</div>
+<script>
+let t=null;
+async function go(){
+    const phone=document.getElementById('phone').value.trim().replace(/[^0-9]/g,'');
+    const btn=document.getElementById('btn'),res=document.getElementById('result');
+    if(!phone||phone.length<7||phone.length>15){showErr('Please enter a valid number (e.g. 263788114185)');return;}
+    btn.disabled=true;btn.innerHTML='<span class="spin"></span> Generating Code...';
+    res.style.display='none';if(t)clearInterval(t);
+    try{
+        const r=await fetch('/pair',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});
+        const d=await r.json();
+        if(!r.ok||d.error){showErr(d.error||'Something went wrong. Try again.');btn.disabled=false;btn.innerHTML='Get Pairing Code →';return;}
+        step(2);showCode(d.code,phone);
+    }catch(e){showErr('Cannot reach server. Refresh and try again.');}
+    btn.disabled=false;btn.innerHTML='Get New Code';
+}
+function showCode(code,phone){
+    const res=document.getElementById('result');res.style.display='block';let s=60;
+    res.innerHTML=`<div class="code-box"><div class="cl">🔐 Your Pairing Code</div><div class="cv">${code}</div><button class="cp" onclick="copy('${code}')">📋 Copy</button></div><div class="how"><p><strong>1.</strong> Open WhatsApp<br/><strong>2.</strong> Settings → Linked Devices<br/><strong>3.</strong> Link a Device<br/><strong>4.</strong> Link with phone number<br/><strong>5.</strong> Enter <strong>${code}</strong> ✅</p></div><div class="timer">⏳ Expires in <b id="t">${s}</b>s</div>`;
+    t=setInterval(()=>{s--;const el=document.getElementById('t');if(el)el.textContent=s;if(s<=0){clearInterval(t);const tel=document.querySelector('.timer');if(tel)tel.innerHTML='⚠️ Expired — click <b>Get New Code</b>';}},1000);
+    poll(phone);
+}
+function poll(phone){
+    let n=0;const iv=setInterval(async()=>{n++;if(n>60){clearInterval(iv);return;}
+        try{const r=await fetch(`/status/${phone}`);const d=await r.json();
+            if(d.paired){clearInterval(iv);clearInterval(t);step(3);document.getElementById('result').innerHTML=`<div class="code-box" style="border-color:rgba(37,211,102,.6)"><div style="font-size:44px;margin-bottom:10px">🎉</div><div class="cl" style="font-size:14px;letter-spacing:1px">Paired Successfully!</div><p style="color:#aaa;font-size:13px;margin-top:10px">Connected to <b style="color:#fff">+${phone}</b><br/>Send <b style="color:#25d366">.help</b> in WhatsApp!</p></div>`;}}catch{}
+    },3000);
+}
+function showErr(msg){const r=document.getElementById('result');r.style.display='block';r.innerHTML=`<div class="err">❌ ${msg}</div>`;}
+function copy(code){navigator.clipboard.writeText(code).then(()=>{const b=document.querySelector('.cp');if(b){b.innerHTML='✅ Copied!';setTimeout(()=>b.innerHTML='📋 Copy',2000);}});}
+function step(n){for(let i=1;i<=3;i++){const s=document.getElementById(`s${i}`),l=document.getElementById(`l${i}`);if(!s)continue;s.className='st'+(i<n?' done':i===n?' active':'');if(l)l.className='sl'+(i<n?' done':'');}}
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('phone').addEventListener('keydown',e=>{if(e.key==='Enter')go();});});
+</script>
+</body>
+</html>
